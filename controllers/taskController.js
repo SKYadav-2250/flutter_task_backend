@@ -4,7 +4,7 @@ const createTask = async (req, res) => {
   try {
     const { title, description , dueDate } = req.body;
     
-    const task = await Task.create({ title, description,dueDate, user: req.user.id });
+    const task = await Task.create({ title, description,dueDate, pending, user: req.user.id });
     console.log(`eror uaha ahjksj  , ${task}  `)
     return res.status(201).json(task);
   } catch (err) {
@@ -28,7 +28,7 @@ const updateTask = async (req, res) => {
     if (!task) return res.status(404).json({ message: 'Task not found' });
     if (task.user.toString() !== req.user.id) return res.status(403).json({ message: 'Not authorized' });
 
-    const updates = ['title', 'description', 'completed' , 'dueDate'];
+    const updates = ['title', 'description', 'status' , 'dueDate'];
     updates.forEach((key) => {
       if (req.body[key] !== undefined) task[key] = req.body[key];
     });
