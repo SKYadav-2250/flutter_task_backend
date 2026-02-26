@@ -4,8 +4,8 @@ const createTask = async (req, res) => {
   try {
     const { title, description , dueDate } = req.body;
     
-    const task = await Task.create({ title, description,dueDate, pending, user: req.user.id });
-    console.log(`eror uaha ahjksj  , ${task}  `)
+    const task = await Task.create({ title, description,dueDate, user: req.user.id });
+
     return res.status(201).json(task);
   } catch (err) {
     return res.status(500).json({ message: 'Server error', error: err.message });
@@ -43,11 +43,17 @@ const updateTask = async (req, res) => {
 const deleteTask = async (req, res) => {
   try {
     const { id } = req.params;
+    console.log(`cdbdhjb ${id}`)  ;
+    
     const task = await Task.findById(id);
+
+    console.log(`tasl si ${task}`);
+
+
     if (!task) return res.status(404).json({ message: 'Task not found' });
     if (task.user.toString() !== req.user.id) return res.status(403).json({ message: 'Not authorized' });
 
-    await task.remove();
+    await task.deleteOne();
     return res.json({ message: 'Task deleted' });
   } catch (err) {
     return res.status(500).json({ message: 'Server error', error: err.message });
